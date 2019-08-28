@@ -48,7 +48,7 @@ int save_value(char *positon, int posSize, char *maybeValue)
 
     while(i < posSize-1){
         if(*(maybeValue+1) == '<'){
-            p_tmp = parse_note(maybeValue+1);   //写到if里有警告不爽，遂拿出
+            p_tmp = parse_note(maybeValue+1);
             if(p_tmp){
                 maybeValue = p_tmp;
             }
