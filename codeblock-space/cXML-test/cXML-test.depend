@@ -1,7 +1,10 @@
 # depslib dependency file v1.0
-1566979718 source:d:\data_github\cxml\codeblock-space\cxml-test\main.c
+1566989479 source:d:\data_github\cxml\codeblock-space\cxml-test\main.c
 	<stdio.h>
 	<stdlib.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
 	"hash.h"
 	"parse_xml.h"
 	"stack.h"
@@ -11,12 +14,16 @@
 
 1566955378 d:\data_github\cxml\codeblock-space\cxml-test\hash.h
 
-1566978902 source:d:\data_github\cxml\codeblock-space\cxml-test\parse_xml.c
+1566989323 source:d:\data_github\cxml\codeblock-space\cxml-test\parse_xml.c
 	"parse_xml.h"
+	"hash.h"
+	"stack.h"
 	<unistd.h>
 	<string.h>
+	<stdlib.h>
+	<stdio.h>
 
-1566980325 d:\data_github\cxml\codeblock-space\cxml-test\parse_xml.h
+1566988589 d:\data_github\cxml\codeblock-space\cxml-test\parse_xml.h
 	<stdio.h>
 
 1566979525 source:d:\data_github\cxml\codeblock-space\cxml-test\stack.c

@@ -7,20 +7,21 @@
 #include <stdio.h>
 
 
-char *load_xml_file(FILE *fd)
+char *load_xml_file(int fd)
 {
-    FILE *tmp_fd = fd;
+    int tmp_fd = fd;
     long Fsize = 0;
     char *fileMem = NULL;
+    char *tmp = NULL;
 
     /*read all of file*/
-    fseek(tmp_fd, 0, SEEK_END);
-    Fsize = ftell(tmp_fd);
-    rewind(tmp_fd);
+    Fsize = lseek(tmp_fd, 0, SEEK_END);
+    printf("%d\n", Fsize);
+    lseek(tmp_fd, 0, SEEK_SET);
 
     /*ֱput file into memery*/
-    fileMem = (char *)calloc(Fsize+1, sizeof(char));
-    fprintf(tmp_fd, "%s", fileMem);
+    fileMem = (char *)malloc(sizeof(char)*Fsize+1);
+    read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
 }
@@ -48,7 +49,7 @@ int save_value(char *positon, int posSize, char *maybeValue)
 
     while(i < posSize-1){
         if(*(maybeValue+1) == '<'){
-            p_tmp = parse_note(maybeValue+1);   //写到if里有警告不爽，遂拿出
+            p_tmp = parse_note(maybeValue+1);
             if(p_tmp){
                 maybeValue = p_tmp;
             }
@@ -73,7 +74,7 @@ x_tree_t *parse_xml(char *root)
     char *tmpValue = (char *)calloc(1024, sizeof(char));    //save the value
     x_tree_t *treeRoot = NULL;      //result rootks
     x_tree_t *tmpSibling = NULL;    //record the sibling
-    while(*pf != '\0'){
+    while(*pf != EOF){
         if('<' == *pf){
             int i = 0;
             int valLengh = 0;

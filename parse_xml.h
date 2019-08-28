@@ -49,7 +49,7 @@ x_tree_t *parse_xml(char *root);
 * @ref xml-DOM.h
 * @note
 */
-char *load_xml_file(FILE *fd);
+char *load_xml_file(int fd);
 
 /**
 * 解析注释
