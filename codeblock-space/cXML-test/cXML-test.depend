@@ -33,3 +33,37 @@
 
 1566977396 d:\data_github\cxml\codeblock-space\cxml-test\stack.h
 
+1566995784 source:g:\mygithub\cxml\codeblock-space\cxml-test\hash.c
+	"hash.h"
+
+1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\hash.h
+
+1567006673 source:g:\mygithub\cxml\codeblock-space\cxml-test\main.c
+	<stdio.h>
+	<stdlib.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<fcntl.h>
+	"hash.h"
+	"parse_xml.h"
+	"stack.h"
+
+1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.h
+	<stdio.h>
+
+1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\stack.h
+
+1567006448 source:g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.c
+	"parse_xml.h"
+	"hash.h"
+	"stack.h"
+	<unistd.h>
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+
+1567007137 source:g:\mygithub\cxml\codeblock-space\cxml-test\stack.c
+	<stdio.h>
+	<string.h>
+	"stack.h"
+

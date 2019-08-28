@@ -14,8 +14,8 @@ int main()
     long Fsize = 0;
     int fp = open("eg_XML.xml", O_RDONLY);
 
-    printf("%s\n", load_xml_file(fp));
+    //printf("%s\n", load_xml_file(fp));
     root = parse_xml(load_xml_file(fp));
-    printf("%s\n", root->child->key);
+    printf("%s\n", root->child->child->value);
     return 0;
 }

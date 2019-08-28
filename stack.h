@@ -1,7 +1,7 @@
 #ifndef SIMPLE_STACK
 #define SIMPLE_STACK
 
-void *xmlStack[50];
+extern void *xmlStack[];
 
 /**
 * 初始化简单的栈
