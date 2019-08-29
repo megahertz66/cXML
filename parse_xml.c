@@ -79,8 +79,8 @@ x_tree_t *parse_xml(char *root)
             if(*(pf) == '/')  pf++;   //ignore the '/'
             while(*pf != '>'){
                 char * saveValue = NULL;
-                tmpName[i++] = *(++pf);    //ignore the '<' and copy the lable
-                if(*(pf+1) == '>'){
+                tmpName[i++] = *(pf++);    //ignore the '<' and copy the lable
+                if(*(pf) == '>'){
                     //printf("pf = %c \n", *pf);
                     char *xmlName = (char *)calloc(31, sizeof(char));
                     tmpName[i] = '\0';     //make string
@@ -101,7 +101,7 @@ x_tree_t *parse_xml(char *root)
                     else if( (topStack() == NULL) || ( ((x_tree_t *)topStack())->hashNode != tmpHash) ){
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
-                        valLengh = save_value(tmpValue, 1023, pf+2);
+                        valLengh = save_value(tmpValue, 1023, pf+1);
                         //printf("valLengh = %s  \n", tmpValue);
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
@@ -116,11 +116,17 @@ x_tree_t *parse_xml(char *root)
                             /* 
                              * 判断父亲是否有儿子，如果有就不要在认爸爸了。
                              * 如果父亲有儿子，就认儿子当兄弟，如果儿子有兄弟就认儿子的儿子当兄弟。
-                             * TODO:认topStack的儿子当兄弟
+                             * "认贼作父"
                              */
-                            ( (x_tree_t *)topStack() )->child = tmpLable;
-                            if(tmpSibling != NULL){
-                                tmpSibling->sibling = tmpLable;
+                            if( ( (x_tree_t *)topStack() )->child == NULL){
+                                ( (x_tree_t *)topStack() )->child = tmpLable;
+                            }
+                            else{
+                                while( ( (x_tree_t *)topStack() )->child->sibling != NULL){
+                                    ( (x_tree_t *)topStack() )->child->sibling = \
+                                    ( (x_tree_t *)topStack() )->child->sibling->sibling;
+                                }
+                                ( (x_tree_t *)topStack() )->child->sibling = tmpLable;
                             }
                         }
                         pushStack((void *)tmpLable);    //push lable in stack

@@ -113,11 +113,24 @@ x_tree_t *parse_xml(char *root)
                         tmpLable->value = saveValue;
                         // find his father and sibling
                         if(topStack() != NULL){
-                            ( (x_tree_t *)topStack() )->child = tmpLable;
-                            printf("(x_tree_t *)topStack()->key == %s \n", ((x_tree_t *)topStack())->key);
-                            if(tmpSibling != NULL){
-                                tmpSibling->sibling = tmpLable;
+                            /* 
+                             * 判断父亲是否有儿子，如果有就不要在认爸爸了。
+                             * 如果父亲有儿子，就认儿子当兄弟，如果儿子有兄弟就认儿子的儿子当兄弟。
+                             * TODO:认topStack的儿子当兄弟。
+                             */
+                            if( ( (x_tree_t *)topStack() )->child == NULL){
+                                ( (x_tree_t *)topStack() )->child = tmpLable;
                             }
+                            else{
+                                while( ( (x_tree_t *)topStack() )->child->sibling != NULL){
+                                    ( (x_tree_t *)topStack() )->child->sibling = \
+                                    ( (x_tree_t *)topStack() )->child->sibling->sibling;
+                                }
+                                ( (x_tree_t *)topStack() )->child->sibling = tmpLable;
+                            }
+                            // if(tmpSibling != NULL){
+                            //     tmpSibling->sibling = tmpLable;
+                            // }
                         }
                         pushStack((void *)tmpLable);    //push lable in stack
                     }
