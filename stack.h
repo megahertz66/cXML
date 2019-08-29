@@ -1,4 +1,4 @@
-/**
+/**better
 * @file xml-DOM.h
 * @brief xml-DOM生成树
 * @author Hert Zhao & Alex Wang
