@@ -1,3 +1,11 @@
+/**
+* @file xml-DOM.h
+* @brief xml-DOM生成树
+* @author Hert Zhao & Alex Wang
+* @date 2019-8-29
+* @version A001
+*/
+
 #ifndef SIMPLE_STACK
 #define SIMPLE_STACK
 
