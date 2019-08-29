@@ -59,6 +59,7 @@ int save_value(char *positon, int posSize, char *maybeValue)
 
 /*
     弹栈与下一个压栈为兄弟，入栈与下一个压栈为父子
+    TODO: 如果要兼容文件中存在 '\0' 的情况是不是将 while(*pf != '\0') 结合文件长度判断
 */
 x_tree_t *parse_xml(char *root)
 {
@@ -86,8 +87,6 @@ x_tree_t *parse_xml(char *root)
                     //此处if 和else if的条件有些多余，为了逻辑清晰，暂时保留。
                     if( (topStack() != NULL) && ((x_tree_t *)topStack())->hashNode == tmpHash ){
                         free(xmlName);      //repeat the lable name
-                        // save his sibling 质疑！
-                        tmpSibling = (x_tree_t *)topStack();
                         if(lenStack() == 1){
                             treeRoot =  (x_tree_t *)popStack();  //it's tree root
                         }
@@ -133,3 +132,57 @@ x_tree_t *parse_xml(char *root)
     }
     return treeRoot;
 }
+
+// the rount like  address.linkman.email == van_darkholme@163.com
+int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
+{
+    char *pstart = rount;
+    char *pend   = NULL;
+    int count = 0;
+    int result = 0;
+
+    if(!root) return result++;
+
+    if(strchr(pstart, '.')){
+        do{
+            pend = strchr(pstart, '.');
+            *pend = '\0';
+            arrayIn[count++] = adler_32(pstart);
+            pstart = pend+1;
+        }
+        while(pend);
+        arrayIn[count] = adler_32(pstart);      //parse the last lable
+    }
+    else{
+        arrayIn[0] = adler_32(root);
+        arrayLengh = 1;
+    }
+    return result;
+}
+
+
+int xml_show(char *treeOut, unsigned int treeLengh)
+{
+    return 0;
+}
+
+
+
+
+int xml_find(char *routeIn, unsigned int rountLengh, char *treeOut, unsigned int treeLengh)
+{
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
