@@ -16,7 +16,6 @@ char *load_xml_file(int fd)
 
     /*read all of file*/
     Fsize = lseek(tmp_fd, 0, SEEK_END);
-    printf("%d\n", Fsize);
     lseek(tmp_fd, 0, SEEK_SET);
 
     /*ֱput file into memery*/
@@ -26,7 +25,7 @@ char *load_xml_file(int fd)
     return fileMem;
 }
 
-
+/* unused*/
 char *parse_note(char *start)
 {
     int i = 0;
@@ -52,10 +51,8 @@ int save_value(char *positon, int posSize, char *maybeValue)
             break;
         }
         positon[i++] = *maybeValue++;
-        //printf("%c", *maybeValue);
     }
     positon[i] = '\0';
-    //printf("\n");
     return i;
 }
 
@@ -81,7 +78,6 @@ x_tree_t *parse_xml(char *root)
                 char * saveValue = NULL;
                 tmpName[i++] = *(pf++);    //ignore the '<' and copy the lable
                 if(*(pf) == '>'){
-                    //printf("pf = %c \n", *pf);
                     char *xmlName = (char *)calloc(31, sizeof(char));
                     tmpName[i] = '\0';     //make string
                     strcpy(xmlName, tmpName);
@@ -101,8 +97,7 @@ x_tree_t *parse_xml(char *root)
                     else if( (topStack() == NULL) || ( ((x_tree_t *)topStack())->hashNode != tmpHash) ){
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
-                        valLengh = save_value(tmpValue, 1023, pf+1);
-                        //printf("valLengh = %s  \n", tmpValue);
+                        valLengh = save_value(tmpValue, 1023, pf+1);           
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 

@@ -1,6 +1,8 @@
 # cXML
 
-**xml tree parse with c**
+	Hert & Alex 共同动手实践的第一个项目，利用简单的思路去解析一棵标准的XML树结构。
+	项目仍在完善之中。
+
 
 ## log  
 
