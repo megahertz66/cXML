@@ -134,14 +134,14 @@ x_tree_t *parse_xml(char *root)
 }
 
 // the rount like  address.linkman.email == van_darkholme@163.com
-int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
+int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
 {
     char *pstart = rount;
     char *pend   = NULL;
     int count = 0;
     int result = 0;
 
-    if(!root) return result++;
+    if(!rount) return result++;
 
     if(strchr(pstart, '.')){
         do{
@@ -150,11 +150,12 @@ int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[],
             arrayIn[count++] = adler_32(pstart);
             pstart = pend+1;
         }
-        while(pend);
+        while(pend && (count<arrayLengh));
         arrayIn[count] = adler_32(pstart);      //parse the last lable
+        arrayLengh = count;
     }
     else{
-        arrayIn[0] = adler_32(root);
+        arrayIn[0] = adler_32(rount);
         arrayLengh = 1;
     }
     return result;

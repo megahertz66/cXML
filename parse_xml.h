@@ -78,7 +78,7 @@ int save_value(char *positon, int posSize, char *maybeValue);
 * @ref xml-DOM.h
 * @note
 */
-int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh);
+int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh);
 
 /**
 * 遍历xml树
