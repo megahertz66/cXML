@@ -1,4 +1,4 @@
-/*
+/**!@#$%^&
     author: Christian Bender
     This file contains the public interface
 
