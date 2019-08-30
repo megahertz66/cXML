@@ -38,7 +38,7 @@
 
 1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\hash.h
 
-1567006673 source:g:\mygithub\cxml\codeblock-space\cxml-test\main.c
+1567156852 source:g:\mygithub\cxml\codeblock-space\cxml-test\main.c
 	<stdio.h>
 	<stdlib.h>
 	<sys/types.h>
@@ -48,12 +48,12 @@
 	"parse_xml.h"
 	"stack.h"
 
-1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.h
+1567096722 g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.h
 	<stdio.h>
 
 1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\stack.h
 
-1567006448 source:g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.c
+1567156601 source:g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.c
 	"parse_xml.h"
 	"hash.h"
 	"stack.h"
@@ -61,8 +61,10 @@
 	<string.h>
 	<stdlib.h>
 	<stdio.h>
+	<sys/stat.h>
+	<sys/types.h>
 
-1567007137 source:g:\mygithub\cxml\codeblock-space\cxml-test\stack.c
+1567007168 source:g:\mygithub\cxml\codeblock-space\cxml-test\stack.c
 	<stdio.h>
 	<string.h>
 	"stack.h"

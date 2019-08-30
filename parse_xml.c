@@ -5,21 +5,24 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 char *load_xml_file(int fd)
 {
+    struct stat fileInfo;
     int tmp_fd = fd;
     long Fsize = 0;
     char *fileMem = NULL;
-    char *tmp = NULL;
+    int   tmp = 0;
 
     /*read all of file*/
-    Fsize = lseek(tmp_fd, 0, SEEK_END);
-    lseek(tmp_fd, 0, SEEK_SET);
-
+    fstat(tmp_fd, &fileInfo);
+    Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
-    fileMem = (char *)malloc(sizeof(char)*Fsize+1);
+    fileMem = (char *)calloc(1, sizeof(char)*Fsize+1);      //没有被释放
+    fileMem[Fsize+1] = '\0';
     read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
@@ -68,10 +71,9 @@ x_tree_t *parse_xml(char *root)
     char *tmpValue = (char *)calloc(1024, sizeof(char));    //save the value
     x_tree_t *treeRoot = NULL;      //result rootks
     x_tree_t *tmpSibling = NULL;    //record the sibling
+    int valLengh = 0;
     while(*pf != '\0'){
         if('<' == *pf){
-            int i = 0;
-            int valLengh = 0;
             int tmpHash = 0;
             char *xmlName = (char *)calloc(31, sizeof(char));
             char *tmpXmlName = xmlName;
@@ -96,7 +98,8 @@ x_tree_t *parse_xml(char *root)
                     else if( (topStack() == NULL) || ( ((x_tree_t *)topStack())->hashNode != tmpHash) ){
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
-                        valLengh = save_value(tmpValue, 1023, pf+1);           
+                        valLengh = save_value(tmpValue, 1023, pf+1);
+                        //pf += (valLengh-1);
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 
@@ -107,7 +110,7 @@ x_tree_t *parse_xml(char *root)
                         tmpLable->value = saveValue;
                         // find his father and sibling
                         if(topStack() != NULL){
-                            /* 
+                            /*
                              * 判断父亲是否有儿子，如果有就不要在认爸爸了。
                              * 如果父亲有儿子，就认儿子当兄弟，如果儿子有兄弟就认儿子的儿子当兄弟。
                              * "认贼作父"
@@ -124,6 +127,8 @@ x_tree_t *parse_xml(char *root)
                             }
                         }
                         pushStack((void *)tmpLable);    //push lable in stack
+                        //printf("pf+valLengh =%c\n", *(pf+valLengh));
+                        //pf += valLengh;
                     }
                 }
             }
@@ -134,14 +139,14 @@ x_tree_t *parse_xml(char *root)
 }
 
 // the rount like  address.linkman.email == van_darkholme@163.com
-int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
+int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
 {
     char *pstart = rount;
     char *pend   = NULL;
     int count = 0;
     int result = 0;
 
-    if(!rount) return result++;
+    if(!root) return result++;
 
     if(strchr(pstart, '.')){
         do{
@@ -150,12 +155,11 @@ int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int arrayLe
             arrayIn[count++] = adler_32(pstart);
             pstart = pend+1;
         }
-        while(pend && (count<arrayLengh));
+        while(pend);
         arrayIn[count] = adler_32(pstart);      //parse the last lable
-        arrayLengh = count;
     }
     else{
-        arrayIn[0] = adler_32(rount);
+        arrayIn[0] = adler_32(root);
         arrayLengh = 1;
     }
     return result;

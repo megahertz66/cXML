@@ -5,21 +5,24 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 char *load_xml_file(int fd)
 {
+    struct stat fileInfo;
     int tmp_fd = fd;
     long Fsize = 0;
     char *fileMem = NULL;
-    char *tmp = NULL;
+    int   tmp = 0;
 
     /*read all of file*/
-    Fsize = lseek(tmp_fd, 0, SEEK_END);
-    lseek(tmp_fd, 0, SEEK_SET);
-
+    fstat(tmp_fd, &fileInfo);
+    Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
-    fileMem = (char *)malloc(sizeof(char)*Fsize+1);
+    fileMem = (char *)calloc(1, sizeof(char)*Fsize+1);      //没有被释放
+    fileMem[Fsize+1] = '\0';
     read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
@@ -96,8 +99,7 @@ x_tree_t *parse_xml(char *root)
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
                         valLengh = save_value(tmpValue, 1023, pf+1);
-                        //printf("pf+valLengh =%c", *(pf+valLengh));
-                        //printf("valLengh = %d   \n", valLengh);
+                        //pf += (valLengh-1);
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 

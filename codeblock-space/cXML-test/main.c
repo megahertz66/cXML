@@ -12,10 +12,12 @@ x_tree_t *root = NULL;
 int main()
 {
     long Fsize = 0;
+    char *string = NULL;
     int fp = open("eg_XML.xml", O_RDONLY);
 
-    //printf("%s\n", load_xml_file(fp));
-    root = parse_xml(load_xml_file(fp));
+    string = load_xml_file(fp);
+//    printf("%s\n", string);
+    root = parse_xml(string);
     printf("%s\n", root->child->child->sibling->value);
     return 0;
 }
