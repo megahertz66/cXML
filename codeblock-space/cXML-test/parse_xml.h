@@ -25,15 +25,6 @@ struct xmlTree{
 }x_tree_t;
 
 /**
-* @brief 栈操作结构
-*/
-typedef
-struct mainList{
-	x_tree_t *node;		///< 标签成员结构
-	int hashNum;		///< 标签名hash值
-};
-
-/**
 * 解析字符串
 * @param[char *root]  	带解析xml的字符转格式
 * @return 0， 			解析成功xml树根地址
@@ -50,6 +41,8 @@ x_tree_t *parse_xml(char *root);
 * @note
 */
 char *load_xml_file(int fd);
+
+char *load_xml_file_v2(FILE *fd);
 
 /**
 * 解析注释

@@ -15,15 +15,29 @@ char *load_xml_file(int fd)
     int tmp_fd = fd;
     long Fsize = 0;
     char *fileMem = NULL;
-    int   tmp = 0;
 
     /*read all of file*/
     fstat(tmp_fd, &fileInfo);
     Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
     fileMem = (char *)calloc(1, sizeof(char)*Fsize+1);      //没有被释放
-    fileMem[Fsize+1] = '\0';
+
     read(tmp_fd, fileMem, Fsize);
+
+    return fileMem;
+}
+
+char *load_xml_file_v2(FILE *fd)
+{
+    char *fileMem = NULL;
+    long lSize;
+
+    fseek (fd , 0 , SEEK_END);
+    lSize = ftell (fd);
+    rewind (fd);
+
+    fileMem = (char *)calloc(1, sizeof(char)*lSize+1);
+    fread (fileMem,1,lSize,fd);
 
     return fileMem;
 }
@@ -47,7 +61,6 @@ char *parse_note(char *start)
 int save_value(char *positon, int posSize, char *maybeValue)
 {
     int i = 0;
-    char *p_tmp = NULL;
 
     while(i < posSize-1){
         if(*(maybeValue) == '<'){
@@ -99,7 +112,6 @@ x_tree_t *parse_xml(char *root)
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
                         valLengh = save_value(tmpValue, 1023, pf+1);
-                        //pf += (valLengh-1);
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 
@@ -127,8 +139,9 @@ x_tree_t *parse_xml(char *root)
                             }
                         }
                         pushStack((void *)tmpLable);    //push lable in stack
-                        //printf("pf+valLengh =%c\n", *(pf+valLengh));
-                        //pf += valLengh;
+
+                        pf += valLengh;
+                        break;
                     }
                 }
             }
