@@ -16,7 +16,6 @@ char *load_xml_file(int fd)
 
     /*read all of file*/
     Fsize = lseek(tmp_fd, 0, SEEK_END);
-    printf("%d\n", Fsize);
     lseek(tmp_fd, 0, SEEK_SET);
 
     /*ֱput file into memery*/
@@ -26,7 +25,7 @@ char *load_xml_file(int fd)
     return fileMem;
 }
 
-
+/* unused*/
 char *parse_note(char *start)
 {
     int i = 0;
@@ -52,16 +51,15 @@ int save_value(char *positon, int posSize, char *maybeValue)
             break;
         }
         positon[i++] = *maybeValue++;
-        //printf("%c", *maybeValue);
     }
     positon[i] = '\0';
-    //printf("\n");
     return i;
 }
 
 
 /*
     弹栈与下一个压栈为兄弟，入栈与下一个压栈为父子
+    TODO: 如果要兼容文件中存在 '\0' 的情况是不是将 while(*pf != '\0') 结合文件长度判断
 */
 x_tree_t *parse_xml(char *root)
 {
@@ -70,28 +68,24 @@ x_tree_t *parse_xml(char *root)
     char *tmpValue = (char *)calloc(1024, sizeof(char));    //save the value
     x_tree_t *treeRoot = NULL;      //result rootks
     x_tree_t *tmpSibling = NULL;    //record the sibling
+    int valLengh = 0;
     while(*pf != '\0'){
         if('<' == *pf){
-            int i = 0;
-            int valLengh = 0;
             int tmpHash = 0;
+            char *xmlName = (char *)calloc(31, sizeof(char));
+            char *tmpXmlName = xmlName;
             pf++;
-            if(*(pf) == '/')  pf++;   //ignore the '/'
+            if(*pf == '/')  pf++;   //ignore the '/'
             while(*pf != '>'){
-                char * saveValue = NULL;
-                tmpName[i++] = *(pf++);    //ignore the '<' and copy the lable
+                *xmlName++ = *pf++;    //ignore the '<' and copy the lable
                 if(*(pf) == '>'){
-                    //printf("pf = %c \n", *pf);
-                    char *xmlName = (char *)calloc(31, sizeof(char));
-                    tmpName[i] = '\0';     //make string
-                    strcpy(xmlName, tmpName);
-                    tmpHash = adler_32(xmlName);    //hash the lable name
+                    char * saveValue = NULL;
+                    *xmlName = '\0';     //make string
+                    tmpHash = adler_32(tmpXmlName);    //hash the lable name
                     /* nearby the same lable */
                     //此处if 和else if的条件有些多余，为了逻辑清晰，暂时保留。
                     if( (topStack() != NULL) && ((x_tree_t *)topStack())->hashNode == tmpHash ){
                         free(xmlName);      //repeat the lable name
-                        // save his sibling 质疑！
-                        tmpSibling = (x_tree_t *)topStack();
                         if(lenStack() == 1){
                             treeRoot =  (x_tree_t *)popStack();  //it's tree root
                         }
@@ -102,7 +96,8 @@ x_tree_t *parse_xml(char *root)
                         x_tree_t *tmpLable = (x_tree_t *)malloc(sizeof(x_tree_t));
                         /* get the content. now pf=='>' , 此处可以确定pf位于value位置 将pf移动置 '>' 位置*/
                         valLengh = save_value(tmpValue, 1023, pf+1);
-                        //printf("valLengh = %s  \n", tmpValue);
+                        //printf("pf+valLengh =%c", *(pf+valLengh));
+                        //printf("valLengh = %d   \n", valLengh);
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 
@@ -113,10 +108,10 @@ x_tree_t *parse_xml(char *root)
                         tmpLable->value = saveValue;
                         // find his father and sibling
                         if(topStack() != NULL){
-                            /* 
+                            /*
                              * 判断父亲是否有儿子，如果有就不要在认爸爸了。
                              * 如果父亲有儿子，就认儿子当兄弟，如果儿子有兄弟就认儿子的儿子当兄弟。
-                             * TODO:认topStack的儿子当兄弟。
+                             * "认贼作父"
                              */
                             if( ( (x_tree_t *)topStack() )->child == NULL){
                                 ( (x_tree_t *)topStack() )->child = tmpLable;
@@ -128,11 +123,10 @@ x_tree_t *parse_xml(char *root)
                                 }
                                 ( (x_tree_t *)topStack() )->child->sibling = tmpLable;
                             }
-                            // if(tmpSibling != NULL){
-                            //     tmpSibling->sibling = tmpLable;
-                            // }
                         }
                         pushStack((void *)tmpLable);    //push lable in stack
+                        //printf("pf+valLengh =%c\n", *(pf+valLengh));
+                        //pf += valLengh;
                     }
                 }
             }
@@ -141,3 +135,57 @@ x_tree_t *parse_xml(char *root)
     }
     return treeRoot;
 }
+
+// the rount like  address.linkman.email == van_darkholme@163.com
+int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
+{
+    char *pstart = rount;
+    char *pend   = NULL;
+    int count = 0;
+    int result = 0;
+
+    if(!root) return result++;
+
+    if(strchr(pstart, '.')){
+        do{
+            pend = strchr(pstart, '.');
+            *pend = '\0';
+            arrayIn[count++] = adler_32(pstart);
+            pstart = pend+1;
+        }
+        while(pend);
+        arrayIn[count] = adler_32(pstart);      //parse the last lable
+    }
+    else{
+        arrayIn[0] = adler_32(root);
+        arrayLengh = 1;
+    }
+    return result;
+}
+
+
+int xml_show(char *treeOut, unsigned int treeLengh)
+{
+    return 0;
+}
+
+
+
+
+int xml_find(char *routeIn, unsigned int rountLengh, char *treeOut, unsigned int treeLengh)
+{
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
