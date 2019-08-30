@@ -73,16 +73,16 @@ x_tree_t *parse_xml(char *root)
             int i = 0;
             int valLengh = 0;
             int tmpHash = 0;
+            char *xmlName = (char *)calloc(31, sizeof(char));
+            char *tmpXmlName = xmlName;
             pf++;
-            if(*(pf) == '/')  pf++;   //ignore the '/'
+            if(*pf == '/')  pf++;   //ignore the '/'
             while(*pf != '>'){
-                char * saveValue = NULL;
-                tmpName[i++] = *(pf++);    //ignore the '<' and copy the lable
+                *xmlName++ = *pf++;    //ignore the '<' and copy the lable
                 if(*(pf) == '>'){
-                    char *xmlName = (char *)calloc(31, sizeof(char));
-                    tmpName[i] = '\0';     //make string
-                    strcpy(xmlName, tmpName);
-                    tmpHash = adler_32(xmlName);    //hash the lable name
+                    char * saveValue = NULL;
+                    *xmlName = '\0';     //make string
+                    tmpHash = adler_32(tmpXmlName);    //hash the lable name
                     /* nearby the same lable */
                     //此处if 和else if的条件有些多余，为了逻辑清晰，暂时保留。
                     if( (topStack() != NULL) && ((x_tree_t *)topStack())->hashNode == tmpHash ){
