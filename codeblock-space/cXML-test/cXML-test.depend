@@ -38,12 +38,13 @@
 
 1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\hash.h
 
-1567169899 source:g:\mygithub\cxml\codeblock-space\cxml-test\main.c
+1567264958 source:g:\mygithub\cxml\codeblock-space\cxml-test\main.c
 	<stdio.h>
 	<stdlib.h>
 	<sys/types.h>
 	<sys/stat.h>
 	<fcntl.h>
+	<string.h>
 	"hash.h"
 	"parse_xml.h"
 	"stack.h"
@@ -53,7 +54,7 @@
 
 1566995784 g:\mygithub\cxml\codeblock-space\cxml-test\stack.h
 
-1567172795 source:g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.c
+1567264910 source:g:\mygithub\cxml\codeblock-space\cxml-test\parse_xml.c
 	"parse_xml.h"
 	"hash.h"
 	"stack.h"

@@ -20,8 +20,7 @@ char *load_xml_file(int fd)
     fstat(tmp_fd, &fileInfo);
     Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
-    fileMem = (char *)calloc(1, sizeof(char)*Fsize+1);      //没有被释放
-
+    fileMem = (char *)calloc(1, sizeof(char)*Fsize);      //没有被释放
     read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
@@ -80,10 +79,8 @@ int save_value(char *positon, int posSize, char *maybeValue)
 x_tree_t *parse_xml(char *root)
 {
     char *pf = root;
-    char tmpName[30] = {0};     //max label name
     char *tmpValue = (char *)calloc(1024, sizeof(char));    //save the value
     x_tree_t *treeRoot = NULL;      //result rootks
-    x_tree_t *tmpSibling = NULL;    //record the sibling
     int valLengh = 0;
     while(*pf != '\0'){
         if('<' == *pf){
