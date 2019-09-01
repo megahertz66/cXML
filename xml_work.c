@@ -90,7 +90,7 @@ x_tree_t *operat_xml_findTree(x_tree_t *root, char *findRout, int routLengh)
         x_tree_t *tmpRoot = root;
         /* find the sibling first */
         while( (tmpIdex != tmpRoot->sibling) && (tmpRoot->sibling != NULL) ){ 
-            rotmpRootot->sibling = tmpRoot->sibling->sibling;
+            tmpRoot->sibling = tmpRoot->sibling->sibling;
         }
         if(tmpIdex = tmpRoot->sibling){
             root = tmpRoot->sibling;
@@ -103,7 +103,7 @@ x_tree_t *operat_xml_findTree(x_tree_t *root, char *findRout, int routLengh)
             goto OVER;
         }
     }
-goto OVER:{
+OVER:{
         free(arrayMem);
         arrayMem = NULL;
         return root;    //the routing is wrong if return NULL
