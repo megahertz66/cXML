@@ -33,8 +33,8 @@ char *load_xml_file_v2(char *fileName, int nameLengh)
 {
     FILE *fd;
     char *fileMem = NULL;
-    filePath = fileName;
     long lSize;
+    filePath = fileName;
 
     fileName[nameLengh+1] = '\0'; 
     fopen(fileName, "rb+");          //TODO: 对于打开错误的判断

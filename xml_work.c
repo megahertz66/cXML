@@ -5,11 +5,12 @@
 static int times;
 static x_tree_t *times_tree;
 
-void print_tab(int times)
+void print_tab(int times, FILE *stream)
 {
     int i = 0;
+    frintf(stream, "%s", "\n");
     for(i; i<times; i++){
-        printf("\t");
+        frintf(stream, "%s", "\t");
     }
 }
 
@@ -39,19 +40,19 @@ int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[],
     }
     return result;
 }
-
-x_tree_t *visit_print_xml(x_tree_t *root, int level, char *stream)
+//TODO:泛型指针
+x_tree_t *visit_print_xml(x_tree_t *root, int level, FILE *stream)
 {
     if(NULL != root){
-        //print_tab(level);         //no care， add it if need
-        fprintf(stream, strlen(root->key), "<%s>", root->key);
-        fpintf(stream, strlen(root->value), "%s", root->value);
+        fprintf(stream, "<%s>", root->key);
+        fpintf(stream, "%s", root->value);
         if(NULL != root->child){
-            return visit_print_xml(root->child, ++level);
+            return visit_print_xml(root->child, ++level, stream);
         }
-        else if(NULL != root->sibling){
-            fprintf(stream, strlen(root->key), "</%s>", root->key);
-            return visit_print_xml(root->sibling, level);
+        fprintf(stream, "</%s>", root->key);
+        print_tab(level, stream);               //no care， add it if need
+        if(NULL != root->sibling){
+            return visit_print_xml(root->sibling, level, stream);
         }
     }
     return NULL;
@@ -60,7 +61,7 @@ x_tree_t *visit_print_xml(x_tree_t *root, int level, char *stream)
 
 void print_xml(x_tree_t *root)
 {
-    visit_print_xml(root, 0);
+    visit_print_xml(root, 0, NULL);
 }
 
 x_tree_t *operat_xml_findTree(x_tree_t *root, char *findRout, int routLengh)
@@ -71,43 +72,43 @@ x_tree_t *operat_xml_findTree(x_tree_t *root, char *findRout, int routLengh)
     int *arrayMem = NULL;
     if(findRout == NULL) return 1;
 
-    /* calc array memery */
+    /* calc array memery */  
     while('\0' != *findRout){                           
         if('.' == findRout[tmpCount])  arrayLengh++;
         tmpCount++;
     }
 
     arrayMem = (int *)calloc(++arrayLengh, sizeof(int));          //TODO:释放内存
-    rountToHash(findRout, routLengh, arrayMem, arrayLengh);
+    rountToHash(root, findRout, routLengh, arrayMem, arrayLengh);
     /* if only one root */
-    if(arrayLengh==1 && arrayMem[0]==root->hashNode){
+    if( (arrayLengh==1) && (arrayMem[0]==root->hashNode) ){
         return root;
     }
+    if(arrayMem[0] != root->hashNode){
+        return NULL;
+    }
 
-    root = root->child;
     for(arrCount=0; arrCount<arrayLengh; arrCount++){
         int tmpIdex = arrayMem[arrCount];
         x_tree_t *tmpRoot = root;
         /* find the sibling first */
-        while( (tmpIdex != tmpRoot->sibling) && (tmpRoot->sibling != NULL) ){ 
+        while( (tmpIdex != tmpRoot->sibling->hashNode) && (tmpRoot->sibling != NULL) ){ 
             tmpRoot->sibling = tmpRoot->sibling->sibling;
         }
-        if(tmpIdex = tmpRoot->sibling){
+        if(tmpIdex == tmpRoot->sibling->hashNode){
             root = tmpRoot->sibling;
         }
-        else if( (tmpIdex != tmpRoot->child) && (tmpRoot->child != NULL) ){
-            root = tmpRoot->child;
+        else if( (tmpIdex == root->child->hashNode) && (tmpRoot->child != NULL) ){
+            root = root->child;
         }
         else{ 
-            root =  NULL;
-            goto OVER;
+            root =  NULL;       //the routing is wrong if return NULL
+            break;
         }
     }
-OVER:{
-        free(arrayMem);
-        arrayMem = NULL;
-        return root;    //the routing is wrong if return NULL
-    }
+    free(arrayMem);
+    arrayMem = NULL;
+    return root;    
 } 
 
 
@@ -124,7 +125,7 @@ char *operat_xml_findName(x_tree_t *root, char *findRout, int routLengh)
 }
 
 
-
+// TODO: 看看有没有儿子，要是有就打value 要么就打子集
 char *operat_xml_findValue(x_tree_t *root, char *findRout, int routLengh)
 {
     x_tree_t *result_tree = NULL;
@@ -183,7 +184,7 @@ int operat_xml_addEntry(x_tree_t *root, char *addRout, int routLengh)
     tmpRoot->hashNode = adler_32(tmpName);
     /* action append the member */
     curtRoot = operat_xml_findTree(addRout);
-    if(curtRoot->child != NULL){
+    if(curtRoot->child  != NULL){
         x_tree_t *tmp    = curtRoot->child;
         curtRoot->child  = tmpRoot;
         tmpRoot->sibling = tmp;

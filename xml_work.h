@@ -21,7 +21,7 @@ enum TOOL_NUM{
 * @ref xml-DOM.h
 * @note
 */
-void print_tab(int times);
+void print_tab(int times, FILE *stream)
 
 /**
 * 路径转hash值
@@ -31,7 +31,7 @@ void print_tab(int times);
 * @ref xml-DOM.h
 * @note
 */
-int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int *arrayLengh);
+int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int *arrayLengh);
 
 /**
 * 遍历打印XML元素
@@ -40,7 +40,7 @@ int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int *arrayL
 * @ref xml-DOM.h
 * @note
 */
-x_tree_t *visit_print_xml(x_tree_t *root, int level);
+x_tree_t *visit_print_xml(x_tree_t *root, int level, FILE *stream);
 
 /**
 * 遍历打印XML元素,对外提供

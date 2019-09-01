@@ -2,3 +2,6 @@
 
 ./codeblock-space/cXML-test/bin
 ./codeblock-space/cXML-test/obj
+*.exe
+*.o
+*.layout
