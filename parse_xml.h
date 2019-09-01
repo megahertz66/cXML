@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+extern char *filePath;
 
 /**
 * @brief XML树标签成员结构
@@ -52,6 +53,15 @@ x_tree_t *parse_xml(char *root);
 char *load_xml_file(int fd);
 
 /**
+* 释放内存文件
+* @param[char *needFree]  	需要释放的文件内存
+* @return int	 			0
+* @ref xml-DOM.h
+* @note
+*/
+int remove_xml_file(char *needFree);
+
+/**
 * 解析注释
 * @param[int fd]  			指向可能发生xml注释的字符串开始
 * @return char* 			返回注释结束位置的后一个字符
@@ -70,34 +80,7 @@ char *parse_note(char *start);
 */
 int save_value(char *positon, int posSize, char *maybeValue);
 
-/**
-* 路径转hash值
-* @param[char *maybeValue]  		指向可能是value的位置
-* @param[char *positon] 			返回注释结束位置的后一个字符
-* @return int						读入长度
-* @ref xml-DOM.h
-* @note
-*/
-int rountToHash(char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh);
 
-/**
-* 遍历xml树
-* @param[char *maybeValue]  		指向可能是value的位置
-* @param[char *positon] 			返回注释结束位置的后一个字符
-* @return int						成功o 失败1
-* @ref xml-DOM.h
-* @note
-*/
-int xml_show(char *treeOut, unsigned int treeLengh);
 
-/**
-* 按照给出路径进行查找
-* @param[char *maybeValue]  		指向可能是value的位置
-* @param[char *positon] 			返回注释结束位置的后一个字符
-* @return int						读入长度
-* @ref xml-DOM.h
-* @note
-*/
-int xml_find(char *routeIn, unsigned int rountLengh, char *treeOut, unsigned int treeLengh);
 
 #endif // PARSE_XML
