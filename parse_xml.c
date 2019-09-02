@@ -22,8 +22,8 @@ char *load_xml_file(int fd)
     fstat(tmp_fd, &fileInfo);
     Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
-    fileMem = (char *)calloc(1, sizeof(char)*Fsize);    
-    read(tmp_fd, fileMem, Fsize);   
+    fileMem = (char *)calloc(1, sizeof(char)*Fsize);
+    read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
 }
@@ -36,7 +36,7 @@ char *load_xml_file_v2(char *fileName, int nameLengh)
     long lSize;
     filePath = fileName;
 
-    fileName[nameLengh+1] = '\0'; 
+    fileName[nameLengh+1] = '\0';
     fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
     fseek (fd , 0 , SEEK_END);
     lSize = ftell (fd);
@@ -164,7 +164,7 @@ x_tree_t *parse_xml(char *root)
 }
 
 
-x_tree_t *lode_xml_to_tree(char *filePath, ing pathLengh)
+x_tree_t *lode_xml_to_tree(char *filePath, int pathLengh)
 {
     char *xmlfile = NULL;
     x_tree_t *treeRoot = NULL;

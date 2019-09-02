@@ -8,7 +8,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+char *filePath = NULL;
 
+/* 使用read存在兼容性问题。故使用 load_xml_file_v2 函数 */
 char *load_xml_file(int fd)
 {
     struct stat fileInfo;
@@ -20,25 +22,38 @@ char *load_xml_file(int fd)
     fstat(tmp_fd, &fileInfo);
     Fsize = fileInfo.st_size;
     /*ֱput file into memery*/
-    fileMem = (char *)calloc(1, sizeof(char)*Fsize);      //没有被释放
+    fileMem = (char *)calloc(1, sizeof(char)*Fsize);
     read(tmp_fd, fileMem, Fsize);
 
     return fileMem;
 }
 
-char *load_xml_file_v2(FILE *fd)
+
+char *load_xml_file_v2(char *fileName, int nameLengh)
 {
+    FILE *fd;
     char *fileMem = NULL;
     long lSize;
+    filePath = fileName;
 
+    fileName[nameLengh+1] = '\0';
+    fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
     fseek (fd , 0 , SEEK_END);
     lSize = ftell (fd);
     rewind (fd);
 
     fileMem = (char *)calloc(1, sizeof(char)*lSize+1);
     fread (fileMem,1,lSize,fd);
+    fclose(fd);
 
     return fileMem;
+}
+
+int remove_xml_file(char *needFree)
+{
+    free(needFree);
+    needFree = NULL;
+    return 0;
 }
 
 /* unused*/
@@ -148,46 +163,20 @@ x_tree_t *parse_xml(char *root)
     return treeRoot;
 }
 
-// the rount like  address.linkman.email == van_darkholme@163.com
-int rountToHash(char *root, char *rount, unsigned int rountLengh, int arrayIn[], int arrayLengh)
+
+x_tree_t *lode_xml_to_tree(char *filePath, int pathLengh)
 {
-    char *pstart = rount;
-    char *pend   = NULL;
-    int count = 0;
-    int result = 0;
+    char *xmlfile = NULL;
+    x_tree_t *treeRoot = NULL;
 
-    if(!root) return result++;
+    xmlfile = load_xml_file_v2(filePath, pathLengh);
+    treeRoot = parse_xml(xmlfile);
+    remove_xml_file(xmlfile);
 
-    if(strchr(pstart, '.')){
-        do{
-            pend = strchr(pstart, '.');
-            *pend = '\0';
-            arrayIn[count++] = adler_32(pstart);
-            pstart = pend+1;
-        }
-        while(pend);
-        arrayIn[count] = adler_32(pstart);      //parse the last lable
-    }
-    else{
-        arrayIn[0] = adler_32(root);
-        arrayLengh = 1;
-    }
-    return result;
+    return treeRoot;
 }
 
 
-int xml_show(char *treeOut, unsigned int treeLengh)
-{
-    return 0;
-}
-
-
-
-
-int xml_find(char *routeIn, unsigned int rountLengh, char *treeOut, unsigned int treeLengh)
-{
-    return 0;
-}
 
 
 

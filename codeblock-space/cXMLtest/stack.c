@@ -2,7 +2,9 @@
 #include <string.h>
 #include "stack.h"
 
-extern void *xmlStack[];      // 0~50
+#define MAXSTACKSIZE    51
+
+void *xmlStack[MAXSTACKSIZE];      // 0~50
 static int size = 0;
 
 void initStack(void)
@@ -35,8 +37,8 @@ void *pushStack(void *value)
 
 int laveStack(void)
 {
-    if(size == 0) return 50;
-    else return 50 - size;
+    if(size == 0) return MAXSTACKSIZE;
+    else return MAXSTACKSIZE - size;
 }
 
 int lenStack(void)

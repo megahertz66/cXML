@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+extern char *filePath;
 
 /**
 * @brief XML树标签成员结构
@@ -23,6 +24,7 @@ struct xmlTree{
 	struct xmlTree *sibling;	///< 同级标签
 	struct xmlTree *child;		///< 次级标签
 }x_tree_t;
+
 
 /**
 * 解析字符串
@@ -42,7 +44,14 @@ x_tree_t *parse_xml(char *root);
 */
 char *load_xml_file(int fd);
 
-char *load_xml_file_v2(FILE *fd);
+/**
+* 释放内存文件
+* @param[char *needFree]  	需要释放的文件内存
+* @return int	 			0
+* @ref xml-DOM.h
+* @note
+*/
+int remove_xml_file(char *needFree);
 
 /**
 * 解析注释
@@ -62,5 +71,8 @@ char *parse_note(char *start);
 * @note
 */
 int save_value(char *positon, int posSize, char *maybeValue);
+
+
+
 
 #endif // PARSE_XML

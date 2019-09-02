@@ -25,14 +25,6 @@ struct xmlTree{
 	struct xmlTree *child;		///< 次级标签
 }x_tree_t;
 
-/**
-* @brief 栈操作结构
-*/
-typedef
-struct mainList{
-	x_tree_t *node;		///< 标签成员结构
-	int hashNum;		///< 标签名hash值
-};
 
 /**
 * 解析字符串
