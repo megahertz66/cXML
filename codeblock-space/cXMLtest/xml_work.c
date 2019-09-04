@@ -29,6 +29,9 @@ int rountToHash(x_tree_t *root, char *rount, unsigned int rountLengh, int arrayI
     if(strchr(pstart, '.')){
         do{
             pend = strchr(pstart, '.');
+            if(!pend){
+                break;
+            }
             *pend = '\0';
             arrayIn[count++] = adler_32(pstart);
             pstart = pend+1;
@@ -202,7 +205,31 @@ int operat_xml_addEntry(x_tree_t *root, char *addRout, int routLengh)
     return 0;
 }
 
+//  这个递归应该可以删除吧。
+void recursive_del(x_tree_t *root)
+{
+    if(!root)
+        if(NULL != root->child){
+            recursive_del(root->child);
+        }
+        if(NULL != root->sibling){
+            recursive_del(root->sibling);
+        }
+        free(root);
+        root = NULL;
+    return ;
+}
+
+// 如果有孩子， if有没有兄弟， 如果有则指向其自身的指针，指向其下一个兄弟， 然后free
+// 如果没有兄弟，则将指向自身的指针置空，然后free
+
 int operat_xml_delEntry(x_tree_t *root, char *delRout, int routLengh)
 {
+    x_tree_t *tmpXTree = NULL;
+
+    tmpXTree = operat_xml_findTree(root, delRout, routLengh);
+    //todo：
     return 0;
 }
+
+

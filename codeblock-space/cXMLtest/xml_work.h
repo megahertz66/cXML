@@ -115,6 +115,15 @@ void write_xml_file(x_tree_t *root);
 int operat_xml_addEntry(x_tree_t *root, char *addRout, int routLengh);
 
 /**
+* 递归删除XML元素项
+* @param[char *root]  	带解析xml的字符转格式
+* @return 0， 			解析成功xml树根地址
+* @ref xml-DOM.h
+* @note
+*/
+void recursive_del(x_tree_t *root);
+
+/**
 * 向指定位置删除XML元素
 * @param[char *root]  	带解析xml的字符转格式
 * @return 0， 			解析成功xml树根地址

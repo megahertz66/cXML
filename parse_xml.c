@@ -36,8 +36,7 @@ char *load_xml_file_v2(char *fileName, int nameLengh)
     long lSize;
     filePath = fileName;
 
-    fileName[nameLengh+1] = '\0';
-    fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
+    fd = fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
     fseek (fd , 0 , SEEK_END);
     lSize = ftell (fd);
     rewind (fd);
@@ -87,10 +86,7 @@ int save_value(char *positon, int posSize, char *maybeValue)
 }
 
 
-/*
-    弹栈与下一个压栈为兄弟，入栈与下一个压栈为父子
-    TODO: 如果要兼容文件中存在 '\0' 的情况是不是将 while(*pf != '\0') 结合文件长度判断
-*/
+
 x_tree_t *parse_xml(char *root)
 {
     char *pf = root;
@@ -127,7 +123,7 @@ x_tree_t *parse_xml(char *root)
                         saveValue = (char *)calloc(valLengh, sizeof(char)+1);
                         strcpy(saveValue, tmpValue);
 
-                        tmpLable->key = xmlName;
+                        tmpLable->key = tmpXmlName;
                         tmpLable->hashNode = tmpHash;
                         tmpLable->child = NULL;
                         tmpLable->sibling = NULL;
