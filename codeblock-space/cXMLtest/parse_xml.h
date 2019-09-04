@@ -72,7 +72,7 @@ char *parse_note(char *start);
 */
 int save_value(char *positon, int posSize, char *maybeValue);
 
-
+x_tree_t *lode_xml_to_tree(char *filePath, int pathLengh);
 
 
 #endif // PARSE_XML

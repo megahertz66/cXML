@@ -36,8 +36,7 @@ char *load_xml_file_v2(char *fileName, int nameLengh)
     long lSize;
     filePath = fileName;
 
-    fileName[nameLengh+1] = '\0';
-    fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
+    fd = fopen(fileName, "rb+");          //TODO: 对于打开错误的判断
     fseek (fd , 0 , SEEK_END);
     lSize = ftell (fd);
     rewind (fd);
