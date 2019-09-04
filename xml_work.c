@@ -16,6 +16,7 @@ void print_tab(int times, FILE *stream)
     return;
 }
 
+//TODO: 不要更改输入的变量。重新review code
 // the rount like  address.linkman.email == van_darkholme@163.com
 int rountToHash(x_tree_t *root, char *rount, unsigned int rountLengh, int arrayIn[], int *arrayLengh)
 {
@@ -32,7 +33,7 @@ int rountToHash(x_tree_t *root, char *rount, unsigned int rountLengh, int arrayI
             if(!pend){
                 break;
             }
-            *pend = '\0';
+            *pend = '0';
             arrayIn[count++] = adler_32(pstart);
             pstart = pend+1;
         }
@@ -79,8 +80,8 @@ x_tree_t *operat_xml_findTree(x_tree_t *root, char *findRout, int routLengh)
     if(findRout == NULL) return NULL;
 
     /* calc array memery */
-    while('\0' != *findRout){
-        if('.' == findRout[tmpCount])  arrayLengh++;
+    while('\0' != findRout[tmpCount]){
+        if(findRout[tmpCount] == '.')  arrayLengh++;
         tmpCount++;
     }
 
@@ -208,7 +209,8 @@ int operat_xml_addEntry(x_tree_t *root, char *addRout, int routLengh)
 //  这个递归应该可以删除吧。
 void recursive_del(x_tree_t *root)
 {
-    if(!root)
+    if(NULL != root)
+	{
         if(NULL != root->child){
             recursive_del(root->child);
         }
@@ -217,7 +219,8 @@ void recursive_del(x_tree_t *root)
         }
         free(root);
         root = NULL;
-    return ;
+    }
+	return ;
 }
 
 // 如果有孩子， if有没有兄弟， 如果有则指向其自身的指针，指向其下一个兄弟， 然后free
@@ -226,10 +229,46 @@ void recursive_del(x_tree_t *root)
 int operat_xml_delEntry(x_tree_t *root, char *delRout, int routLengh)
 {
     x_tree_t *tmpXTree = NULL;
+	x_tree_t *lastXTree = NULL;
+	char *lastRout = NULL;
+	char *lastDot = NULL;
+	int lastLen = 0;
+	int tmpCnt = 0;
+	if('\0' == *delRout)
+	{
+		return -1;
+	}
+	//find last node
 
     tmpXTree = operat_xml_findTree(root, delRout, routLengh);
-    //todo：
+	if(NULL == tmpXTree)return -1;
+
+	lastDot = strrchr(delRout, '.');
+	*lastDot = '\0';
+
+	lastXTree = operat_xml_findTree(root, delRout, routLengh);
+	//if path is not root, and path have sibling
+	if((NULL != lastXTree) && (NULL != tmpXTree->sibling))
+	{
+		if(lastXTree->child == tmpXTree)
+		{
+			lastXTree->child = tmpXTree->sibling;
+		}
+		else if(lastXTree->sibling == tmpXTree)
+		{
+			lastXTree->sibling = tmpXTree->sibling;
+		}
+	}
+	recursive_del(tmpXTree);
+
     return 0;
 }
+
+
+
+
+
+
+
 
 
