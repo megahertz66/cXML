@@ -20,10 +20,13 @@ void print_tab(int times, FILE *stream)
 // the rount like  address.linkman.email == van_darkholme@163.com
 int rountToHash(x_tree_t *root, char *rount, unsigned int rountLengh, int arrayIn[], int *arrayLengh)
 {
-    char *pstart = rount;
+    char *pstart = NULL;
     char *pend   = NULL;
     int count = 0;
     int result = 0;
+
+    pstart = (char *)calloc(rountLengh+1, sizeof(char));
+    strcpy(pstart, rount);
 
     if(!rount) return result = 0;
 
@@ -44,6 +47,7 @@ int rountToHash(x_tree_t *root, char *rount, unsigned int rountLengh, int arrayI
         arrayIn[0] = adler_32(pstart);
         *arrayLengh = 1;
     }
+    free(pstart);
     return result;
 }
 
@@ -232,6 +236,7 @@ int operat_xml_delEntry(x_tree_t *root, char *delRout, int routLengh)
 	x_tree_t *lastXTree = NULL;
 	char *lastRout = NULL;
 	char *lastDot = NULL;
+    char *tmpRout = NULL;
 	int lastLen = 0;
 	int tmpCnt = 0;
 	if('\0' == *delRout)
@@ -239,14 +244,16 @@ int operat_xml_delEntry(x_tree_t *root, char *delRout, int routLengh)
 		return -1;
 	}
 	//find last node
+    tmpRout = (char *)calloc(routLengh+1, sizeof(char));
+    strcpy(tmpRout, delRout);
 
-    tmpXTree = operat_xml_findTree(root, delRout, routLengh);
+    tmpXTree = operat_xml_findTree(root, tmpRout, routLengh);
 	if(NULL == tmpXTree)return -1;
 
-	lastDot = strrchr(delRout, '.');
+	lastDot = strrchr(tmpRout, '.');
 	*lastDot = '\0';
 
-	lastXTree = operat_xml_findTree(root, delRout, routLengh);
+	lastXTree = operat_xml_findTree(root, tmpRout, routLengh);
 	//if path is not root, and path have sibling
 	if((NULL != lastXTree) && (NULL != tmpXTree->sibling))
 	{

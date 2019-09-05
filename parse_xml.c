@@ -172,17 +172,3 @@ x_tree_t *lode_xml_to_tree(char *filePath, int pathLengh)
     return treeRoot;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
